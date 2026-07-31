@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+transformers
+torch
+sentence-transformers
+cython
+numpy
+pydantic
+evidently
+requests
+schedule
+beautifulsoup4
+cloudscraper
+lancedb
+prometheus-fastapi-instrumentator
+prometheus-client
+mlflow

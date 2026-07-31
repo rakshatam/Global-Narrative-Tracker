@@ -1,0 +1,32 @@
+{
+  "title": "MLOps Dashboard",
+  "timezone": "browser",
+  "schemaVersion": 36,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "PyTorch GPU VRAM Allocated (Bytes)",
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        { "expr": "gpu_memory_allocated_bytes", "legendFormat": "Allocated VRAM" },
+        { "expr": "gpu_memory_reserved_bytes", "legendFormat": "Reserved VRAM" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "API Request Latency (Seconds)",
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "rate(http_request_duration_seconds_sum[1m]) / rate(http_request_duration_seconds_count[1m])", "legendFormat": "Avg Latency" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Total API Requests (per minute)",
+      "gridPos": { "h": 5, "w": 12, "x": 0, "y": 9 },
+      "targets": [
+        { "expr": "sum(rate(http_requests_total[1m])) * 60", "legendFormat": "Requests/min" }
+      ]
+    }
+  ]
+}

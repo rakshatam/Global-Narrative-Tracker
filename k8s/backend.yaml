@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gnt-backend
+  labels:
+    app: gnt-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gnt-backend
+  template:
+    metadata:
+      labels:
+        app: gnt-backend
+    spec:
+      containers:
+      - name: gnt-backend
+        image: gnt-backend:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            memory: "3Gi"
+            nvidia.com/gpu: 1
+          requests:
+            memory: "1Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gnt-backend-svc
+spec:
+  selector:
+    app: gnt-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

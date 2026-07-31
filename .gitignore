@@ -1,0 +1,18 @@
+# 1. Passwords and Security (Keeps your server safe)
+htpasswd
+.env
+
+# 2. Massive AI Models & Vector Databases (GitHub has a 100MB limit, this folder is 3GB+)
+backend/ml_cache/
+
+# 3. Local Databases and Logs (You don't want to upload your personal searches)
+backend/tracker.db
+mlflow_data/
+
+# 4. Frontend & Backend Junk Files
+frontend/node_modules/
+frontend/.next/
+backend/__pycache__/
+backend/cython_modules/build/
+backend/cython_modules/*.c
+backend/cython_modules/*.pyd

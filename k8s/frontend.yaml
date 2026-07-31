@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gnt-frontend
+  labels:
+    app: gnt-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gnt-frontend
+  template:
+    metadata:
+      labels:
+        app: gnt-frontend
+    spec:
+      containers:
+      - name: gnt-frontend
+        image: gnt-frontend:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            memory: "1Gi"
+          requests:
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gnt-frontend-svc
+spec:
+  selector:
+    app: gnt-frontend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

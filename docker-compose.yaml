@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:v3.0
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  backend:
+    build:
+      context: ./backend
+    image: gnt-backend:latest
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - ml_cache:/app/ml_cache
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.routers.backend.middlewares=auth"
+      # Secure password wall (admin / password)
+      - "traefik.http.middlewares.auth.basicauth.users=admin:{SHA}W6ph5Mm5Pz8GgiULbPgzG37mj9g="
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
+
+  frontend:
+    build:
+      context: ./frontend
+    image: gnt-frontend:latest
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.routers.frontend.middlewares=auth"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+
+volumes:
+  ml_cache:
